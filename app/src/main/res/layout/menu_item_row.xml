@@ -21,7 +21,6 @@
         android:text="Title"
         android:textSize="17sp"
         android:textStyle="bold"
-        android:textColor="@color/purple_700"
         android:id="@+id/tvTitle"
         android:layout_toRightOf="@+id/img"/>
     <TextView
