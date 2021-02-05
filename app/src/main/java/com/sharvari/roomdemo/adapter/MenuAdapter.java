@@ -1,6 +1,7 @@
 package com.sharvari.roomdemo.adapter;
 
 import android.content.Context;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -28,7 +29,7 @@ public class MenuAdapter extends RecyclerView.Adapter<MenuAdapter.MyViewHolder> 
     @NonNull
     @Override
     public MenuAdapter.MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View v = View.inflate(parent.getContext(), R.layout.menu_item_row, parent);
+        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.menu_item_row, parent, false);
         return new MyViewHolder(v);
     }
 
@@ -37,8 +38,11 @@ public class MenuAdapter extends RecyclerView.Adapter<MenuAdapter.MyViewHolder> 
         Menu item = menuItem.get(position);
         holder.title.setText(item.Title);
         holder.desc.setText(item.Description);
-        holder.price.setText(item.Price);
-        Picasso.get().load(item.Image).into(holder.img);
+        holder.price.setText("$"+item.Price);
+        Picasso.get()
+                .load(item.Image)
+                .placeholder(R.drawable.placeholder)
+                .into(holder.img);
     }
 
     @Override
