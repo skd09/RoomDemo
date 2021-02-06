@@ -13,15 +13,20 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.sharvari.roomdemo.R;
+import com.sharvari.roomdemo.database.model.Cart;
+import com.sharvari.roomdemo.database.model.Menu;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
 public class CartAdapter extends RecyclerView.Adapter<CartAdapter.MyViewHolder>{
     private Context context;
+    private ArrayList<Cart> cartArrayList;
 
-    public CartAdapter(Context context) {
+
+    public CartAdapter(Context context, ArrayList<Cart> cartArrayList) {
         this.context = context;
+        this.cartArrayList = cartArrayList;
     }
 
     @NonNull
@@ -33,12 +38,20 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.MyViewHolder>{
 
     @Override
     public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
-
+        Menu item = cartArrayList.get(position).Item;
+        Cart cartItem = cartArrayList.get(position);
+        holder.name.setText(item.Title);
+        holder.price.setText("$"+cartItem.TotalPrice);
+        holder.qty.setText(cartItem.Quantity+"");
+        Picasso.get().load(item.Image)
+                .resize(90, 90)
+                .placeholder(R.drawable.placeholder)
+                .into(holder.img);
     }
 
     @Override
     public int getItemCount() {
-        return 0;
+        return cartArrayList.size();
     }
 
     public class MyViewHolder extends RecyclerView.ViewHolder {

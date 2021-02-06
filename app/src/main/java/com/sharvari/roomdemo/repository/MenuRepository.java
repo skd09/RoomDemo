@@ -26,4 +26,7 @@ public class MenuRepository {
     public List<Menu> getItems(){
         return menuDao.getList();
     }
+
+    public Menu getMenuItem(int id){ return menuDao.getMenuItem(id);};
+
 }

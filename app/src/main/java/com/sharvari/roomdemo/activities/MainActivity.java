@@ -5,19 +5,25 @@ import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.widget.Button;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.sharvari.roomdemo.R;
 import com.sharvari.roomdemo.adapter.MenuAdapter;
+import com.sharvari.roomdemo.database.model.Cart;
 import com.sharvari.roomdemo.database.model.Menu;
 import com.sharvari.roomdemo.repository.MenuRepository;
 import com.sharvari.roomdemo.utils.Utils;
+import com.sharvari.roomdemo.viewmodel.CartViewModel;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -26,14 +32,20 @@ public class MainActivity extends AppCompatActivity {
     private RecyclerView recyclerview;
     private MenuAdapter adapter;
     private MenuRepository myRepo;
+    private Button btnCart;
+    private CartViewModel model;
+    private List<Cart> cartList = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         recyclerview = findViewById(R.id.recyclerview);
+        btnCart = findViewById(R.id.btnCart);
+
         menuItems = new ArrayList<>();
         myRepo = new MenuRepository(getApplication());
+        model = new CartViewModel(getApplication());
 
         if(myRepo.getItems().size() == 0){
             String menuData = Utils.getAssetJsonData(getApplicationContext());
@@ -52,6 +64,20 @@ public class MainActivity extends AppCompatActivity {
         recyclerview.setAdapter(adapter);
         recyclerview.setLayoutManager(new LinearLayoutManager(this));
         recyclerview.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.VERTICAL));
+
+
+        btnCart.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(MainActivity.this, CartActivity.class));
+            }
+        });
+
+
+
+        model.getAllCartItems().observe(this, carts -> {
+            btnCart.setText("Cart : "+model.getCartSize());
+        });
 
     }
 }

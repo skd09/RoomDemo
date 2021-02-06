@@ -21,6 +21,9 @@ public interface MenuDao extends BaseDao<Menu>{
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insertMenuList(ArrayList<Menu> m);
 
+    @Query("SELECT * FROM tblMenu WHERE Id = :id")
+    Menu getMenuItem(int id);
+
     @Insert
     @Override
     void insert(Menu menu);

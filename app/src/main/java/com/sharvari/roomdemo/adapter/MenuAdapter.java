@@ -1,16 +1,19 @@
 package com.sharvari.roomdemo.adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.sharvari.roomdemo.R;
+import com.sharvari.roomdemo.activities.MenuItemActivity;
 import com.sharvari.roomdemo.database.model.Menu;
 import com.squareup.picasso.Picasso;
 
@@ -43,6 +46,15 @@ public class MenuAdapter extends RecyclerView.Adapter<MenuAdapter.MyViewHolder> 
                 .load(item.Image)
                 .placeholder(R.drawable.placeholder)
                 .into(holder.img);
+
+        holder.layout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent(context, MenuItemActivity.class);
+                i.putExtra("Item", item.Id);
+                context.startActivity(i);
+            }
+        });
     }
 
     @Override
@@ -53,6 +65,7 @@ public class MenuAdapter extends RecyclerView.Adapter<MenuAdapter.MyViewHolder> 
     public class MyViewHolder extends RecyclerView.ViewHolder {
         private TextView title, desc, price;
         private ImageView img;
+        private RelativeLayout layout;
 
         public MyViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -60,6 +73,7 @@ public class MenuAdapter extends RecyclerView.Adapter<MenuAdapter.MyViewHolder> 
             desc = itemView.findViewById(R.id.tvDescription);
             price = itemView.findViewById(R.id.tvPrice);
             img = itemView.findViewById(R.id.img);
+            layout = itemView.findViewById(R.id.layout);
         }
     }
 }

@@ -3,26 +3,36 @@ package com.sharvari.roomdemo.activities;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RatingBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.sharvari.roomdemo.R;
+import com.sharvari.roomdemo.database.model.Cart;
+import com.sharvari.roomdemo.database.model.Menu;
+import com.sharvari.roomdemo.repository.MenuRepository;
+import com.sharvari.roomdemo.viewmodel.CartViewModel;
+import com.squareup.picasso.Picasso;
 
 public class MenuItemActivity  extends AppCompatActivity {
     private String LOG = "Room";
-    private MenuItem item;
+    private Menu item;
     private TextView name, desc, price, qty;
     private ImageView img;
     private RatingBar ratingBar;
     private Button btnAdd;
     private ImageButton btnRemoveCart, btnAddCart;
     private LinearLayout qtyLayout;
+    private MenuRepository menuRepository;
+    private CartViewModel model;
+    private Cart cartItem;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,6 +41,9 @@ public class MenuItemActivity  extends AppCompatActivity {
 
         int id = getIntent().getIntExtra("Item", 0);
         Log.i(LOG, "Id is "+id);
+
+        model = new CartViewModel(getApplication());
+        menuRepository = new MenuRepository(getApplication());
 
         name = findViewById(R.id.tvName);
         qty = findViewById(R.id.tvQty);
@@ -42,9 +55,80 @@ public class MenuItemActivity  extends AppCompatActivity {
         btnAddCart = findViewById(R.id.btnAddCart);
         btnRemoveCart = findViewById(R.id.btnRemoveCart);
         btnAdd = findViewById(R.id.btnAdd);
+        qtyLayout.setVisibility(View.GONE);
+
+
+        if(model.getCartItem(id) != null){
+            cartItem = model.getCartItem(id);
+            item = cartItem.Item;
+            setData(true);
+        }else{
+            item = menuRepository.getMenuItem(id);
+            setData(false);
+        }
+
+
+        model.getAllCartItems().observe(this, carts -> {
+            Toast.makeText(this, "Cart is updated.", Toast.LENGTH_SHORT).show();
+        });
+
+        btnAdd.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Cart c = new Cart();
+                c.ItemId = item.Id;
+                c.Item = item;
+                c.Quantity = 1;
+                c.TotalPrice = item.Price;
+
+                model.insertCartItem(c);
+                btnAdd.setVisibility(View.GONE);
+                qtyLayout.setVisibility(View.VISIBLE);
+                cartItem = c;
+            }
+        });
+
+        btnAddCart.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                cartItem.Quantity += 1;
+                qty.setText(String.valueOf(cartItem.Quantity));
+                cartItem.TotalPrice = cartItem.Quantity * item.Price;
+                price.setText("$"+cartItem.TotalPrice);
+                model.updateCartItem(cartItem);
+            }
+        });
+
+        btnRemoveCart.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(cartItem.Quantity > 1){
+                    cartItem.Quantity -= 1;
+                    qty.setText(String.valueOf(cartItem.Quantity));
+                    cartItem.TotalPrice = cartItem.Quantity * item.Price;
+                    price.setText("$"+cartItem.TotalPrice);
+                    model.updateCartItem(cartItem);
+                }
+            }
+        });
     }
 
     private void setData(Boolean isAdded) {
+        name.setText(item.Title);
+        desc.setText(item.Description);
+        price.setText("$"+item.Price);
+        qty.setText("1");
+        Picasso.get().load(item.Image).into(img);
+        ratingBar.setRating(item.Ratings);
 
+        if(isAdded){
+            qtyLayout.setVisibility(View.VISIBLE);
+            btnAdd.setVisibility(View.GONE);
+            price.setText("$"+cartItem.TotalPrice);
+            qty.setText(String.valueOf(cartItem.Quantity));
+        }
     }
+
+
+
 }
