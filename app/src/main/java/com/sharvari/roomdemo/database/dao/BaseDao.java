@@ -7,6 +7,11 @@ import androidx.room.Update;
 
 public interface BaseDao<T> {
 
+    /* Base DAO is a base interface for all the other DAO interfaces in the project.
+    * Reason to create this is all the DAO will have insert, update and delete common.
+    * Thus, we can inherit it in other interfaces.
+    */
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insert(T t);
 

@@ -37,12 +37,13 @@ public class CartActivity extends AppCompatActivity {
         tvSubTotal = findViewById(R.id.tvSubTotal);
         recyclerView = findViewById(R.id.recyclerview);
 
-        adapter = new CartAdapter(this, cartItems);
+        adapter = new CartAdapter(this, cartItems, model);
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.VERTICAL));
         helper.attachToRecyclerView(recyclerView);
 
+        /*Observing the changes on the Cart.*/
         model.getAllCartItems().observe(this, carts -> {
             cartItems.removeAll(cartItems);
             cartItems.addAll(model.getAllCartItems().getValue());
@@ -52,6 +53,7 @@ public class CartActivity extends AppCompatActivity {
         });
     }
 
+    /*Helper to detect the swipe gesture on the recyclerview*/
     ItemTouchHelper.SimpleCallback simpleCallback = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT) {
         @Override
         public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder target) {

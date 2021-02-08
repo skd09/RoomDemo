@@ -57,7 +57,7 @@ public class MenuItemActivity  extends AppCompatActivity {
         btnAdd = findViewById(R.id.btnAdd);
         qtyLayout.setVisibility(View.GONE);
 
-
+        /* We are checking if the Item is added to the cart or not.*/
         if(model.getCartItem(id) != null){
             cartItem = model.getCartItem(id);
             item = cartItem.Item;
@@ -67,7 +67,7 @@ public class MenuItemActivity  extends AppCompatActivity {
             setData(false);
         }
 
-
+        /*Observing the changes on the Cart.*/
         model.getAllCartItems().observe(this, carts -> {
             Toast.makeText(this, "Cart is updated.", Toast.LENGTH_SHORT).show();
         });
@@ -88,6 +88,7 @@ public class MenuItemActivity  extends AppCompatActivity {
             }
         });
 
+        /*Updating the quantity against the item in the cart.*/
         btnAddCart.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

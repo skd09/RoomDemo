@@ -15,6 +15,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.sharvari.roomdemo.R;
 import com.sharvari.roomdemo.database.model.Cart;
 import com.sharvari.roomdemo.database.model.Menu;
+import com.sharvari.roomdemo.viewmodel.CartViewModel;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -22,11 +23,12 @@ import java.util.ArrayList;
 public class CartAdapter extends RecyclerView.Adapter<CartAdapter.MyViewHolder>{
     private Context context;
     private ArrayList<Cart> cartArrayList;
+    private CartViewModel model;
 
-
-    public CartAdapter(Context context, ArrayList<Cart> cartArrayList) {
+    public CartAdapter(Context context, ArrayList<Cart> cartArrayList, CartViewModel model) {
         this.context = context;
         this.cartArrayList = cartArrayList;
+        this.model = model;
     }
 
     @NonNull
@@ -47,6 +49,30 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.MyViewHolder>{
                 .resize(90, 90)
                 .placeholder(R.drawable.placeholder)
                 .into(holder.img);
+
+        holder.add.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                cartItem.Quantity += 1;
+                holder.qty.setText(String.valueOf(cartItem.Quantity));
+                cartItem.TotalPrice = cartItem.Quantity * item.Price;
+                holder.price.setText("$"+cartItem.TotalPrice);
+                model.updateCartItem(cartItem);
+            }
+        });
+
+        holder.remove.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(cartItem.Quantity > 1){
+                    cartItem.Quantity -= 1;
+                    holder.qty.setText(String.valueOf(cartItem.Quantity));
+                    cartItem.TotalPrice = cartItem.Quantity * item.Price;
+                    holder.price.setText("$"+cartItem.TotalPrice);
+                    model.updateCartItem(cartItem);
+                }
+            }
+        });
     }
 
     @Override

@@ -5,6 +5,14 @@ import androidx.room.PrimaryKey;
 
 @Entity(tableName = "tblMenu")
 public class Menu {
+
+    /* Entity represents a table like structure for the Room Database.
+       @Entity annotation is used to represent the same.
+       @PrimaryKey is a mandatory annotation.
+       These are some of the commonly used annotations.
+       Menu class depicts the tblMenu table in the Room Database.
+    */
+
     @PrimaryKey
     public int Id;
     public String Title;

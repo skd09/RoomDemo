@@ -11,6 +11,8 @@ import java.util.List;
 
 public class MenuRepository {
 
+    /*Repositories are the single entry point for the database along with the DAO*/
+
     private MyDatabase db;
     private MenuDao menuDao;
 

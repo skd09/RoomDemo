@@ -12,6 +12,10 @@ import java.util.List;
 
 public class CartRepository {
 
+    /*Repositories are the single entry point for the database along with the DAO*/
+    /*LiveData is used to observe the changes made on the Cart.*/
+
+
     private LiveData<List<Cart>> cartItems;
     private MyDatabase db;
     private CartDao cartDao;

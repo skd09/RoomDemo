@@ -15,12 +15,21 @@ import java.util.List;
 @Dao
 public interface MenuDao extends BaseDao<Menu>{
 
+    /* DAO is a interface defined to write the room queries
+     * The annotation @Dao is used for the representation.
+     * The @Query, @Insert, @Update, and so on are some more annotations that are commonly used.
+     * We are using cart dao to handle the queries related to the Menu Room Table
+     */
+
+    /*Query to full all the records from the table.*/
     @Query("SELECT * FROM tblMenu ORDER BY ID asc")
     List<Menu> getList();
 
+    /*Query to insert multiple records at once.*/
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insertMenuList(ArrayList<Menu> m);
 
+    /*Query to fetch single record.*/
     @Query("SELECT * FROM tblMenu WHERE Id = :id")
     Menu getMenuItem(int id);
 

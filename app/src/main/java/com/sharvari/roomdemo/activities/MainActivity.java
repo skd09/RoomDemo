@@ -47,6 +47,10 @@ public class MainActivity extends AppCompatActivity {
         myRepo = new MenuRepository(getApplication());
         model = new CartViewModel(getApplication());
 
+        /* If there is no data present in the data. It will load the data from the JSON file.
+        * It will also insert everything in the Menu table.
+        * Else it will load the data from the database.
+        */
         if(myRepo.getItems().size() == 0){
             String menuData = Utils.getAssetJsonData(getApplicationContext());
             Type type = new TypeToken<ArrayList<Menu>>(){}.getType();
@@ -74,7 +78,7 @@ public class MainActivity extends AppCompatActivity {
         });
 
 
-
+        /*Observing the changes on the Cart.*/
         model.getAllCartItems().observe(this, carts -> {
             btnCart.setText("Cart : "+model.getCartSize());
         });

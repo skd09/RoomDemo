@@ -13,6 +13,11 @@ import java.util.List;
 
 public class CartViewModel extends AndroidViewModel {
 
+    /* Use of ViewModel is in the recommended architecture of the Room Database.
+    * It helps to observe if there are any changes done against the table.
+    */
+
+
     private LiveData<List<Cart>> allCartItems;
     private CartRepository cartRepository;
 
